@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: black;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 15px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>股票反着买 别墅靠大海</h1>
+    <button onclick="openForm()">添加抖音数据</button>
+
+    <div id="dataModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeForm()">&times;</span>
+            <h2>添加抖音数据</h2>
+            <form id="douyinForm">
+                <label for="url">URL:</label>
+                <input type="text" id="url" name="url" required>
+                
+                <label for="name">名称:</label>
+                <input type="text" id="name" name="name" required>
+                
+                <label for="quantity">操作数量:</label>
+                <input type="number" id="quantity" name="quantity" required>
+                
+                <label for="relevant">相关:</label>
+                <select id="relevant" name="relevant" required>
+                    <option value="true">正</option>
+                    <option value="false">负</option>
+                </select>
+                
+                <label for="workNumber">作品数:</label>
+                <input type="number" id="workNumber" name="workNumber" required>
+                
+                <button type="button" onclick="submitForm()">提交</button>
+                <button type="button" onclick="closeForm()">取消</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openForm() {
+            document.getElementById("dataModal").style.display = "block";
+        }
+
+        function closeForm() {
+            document.getElementById("dataModal").style.display = "none";
+        }
+
+        function submitForm() {
+            const formData = {
+                url: document.getElementById("url").value,
+                name: document.getElementById("name").value,
+                quantity: parseInt(document.getElementById("quantity").value),
+                relevant: document.getElementById("relevant").value === "true",
+                workNumber: parseInt(document.getElementById("workNumber").value)
+            };
+
+            fetch('/douyin-data/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert('数据保存成功');
+                closeForm();
+                document.getElementById("douyinForm").reset();
+            })
+            .catch(error => {
+                alert('保存失败: ' + error);
+            });
+        }
+
+        // 当用户点击模态框外部时关闭
+        window.onclick = function(event) {
+            const modal = document.getElementById("dataModal");
+            if (event.target == modal) {
+                closeForm();
+            }
+        }
+    </script>
+</body>
+</html>
