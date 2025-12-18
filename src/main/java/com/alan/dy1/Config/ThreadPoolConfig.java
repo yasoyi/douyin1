@@ -9,8 +9,8 @@ public class ThreadPoolConfig {
     @Bean("getWorkCountExecutor")
     public Executor getWorkCountExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(2);
-        executor.setMaxPoolSize(4);
+        executor.setCorePoolSize(6);
+        executor.setMaxPoolSize(10);
         executor.setThreadNamePrefix("getWorkCount");
         executor.initialize();
         return executor;
@@ -20,8 +20,8 @@ public class ThreadPoolConfig {
     @Bean("downloadAudioExecutor")
     public Executor downloadAudioExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(2);
-        executor.setMaxPoolSize(4);
+        executor.setCorePoolSize(4);
+        executor.setMaxPoolSize(8);
         executor.setThreadNamePrefix("downloadAudio");
         executor.initialize();
         return executor;
@@ -31,22 +31,24 @@ public class ThreadPoolConfig {
     @Bean("baiduApiExecutor")
     public Executor baiduApiExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(2);
-        executor.setMaxPoolSize(4);
+        executor.setCorePoolSize(6);
+        executor.setMaxPoolSize(10);
         executor.setThreadNamePrefix("baiduApi");
         executor.initialize();
         return executor;
     }
 
-    //大模型文字提取关键词专属线程池
-    @Bean("textExtractExecutor")
+    //大模型文字提取关键词+选股专属线程池
+    @Bean("textExtractAndBuyExecutor")
     public Executor textExtractExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(2);
-        executor.setMaxPoolSize(4);
+        executor.setCorePoolSize(4);
+        executor.setMaxPoolSize(8);
         executor.setThreadNamePrefix("textExtract");
         executor.initialize();
         return executor;
     }
+
+
 
 }
