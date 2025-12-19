@@ -18,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -51,7 +53,6 @@ public class AllStartImpl implements AllStart {
         
         // 使用专属线程池执行步骤1: 检查视频数量
         executeVideoCheckStep();
-        
 
     }
     
@@ -94,6 +95,32 @@ public class AllStartImpl implements AllStart {
     @RabbitListener(queues = mqConfig.QUEUE_NEW_TO_DownloadAndChange)
     public void executeDownloadAudioStep(String url) {
         logger.info("步骤2: 下载音频并转换为WAV");
+        try {
+            ResponseEntity<Map<String, Object>> response = audioService.downloadAndConvertAudio(url);
+            if (response.getStatusCode().is2xxSuccessful() && 
+                response.getBody() != null && 
+                (Boolean) response.getBody().get("success")) {
+                
+                String fileName = (String) response.getBody().get("file_name");
+                audioConversionService.convertMp3ToWav("douyin_tools/audio", fileName);
+                
+                // 生成WAV文件名
+                String wavFileName = fileName;
+                if (fileName.endsWith(".mp3")) {
+                    wavFileName = fileName.substring(0, fileName.length() - 4) + ".wav";
+                }
+                
+                //通知wav转换成功
+                rabbitTemplate.convertAndSend(mqConfig.QUEUE_DownloadAndChange_TO_BaiduApi, wavFileName);
 
+            } else {
+
+                logger.error("音频下载失败: {}", response.getBody());
+            }
+        } catch (IOException e) {
+            logger.error("音频转换过程中发生IO异常: {}", e.getMessage(), e);
+        } catch (Exception e) {
+            logger.error("音频转换过程中发生未知异常: {}", e.getMessage(), e);
+        }
     }
 }

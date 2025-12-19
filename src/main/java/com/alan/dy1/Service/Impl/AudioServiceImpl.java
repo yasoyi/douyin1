@@ -87,6 +87,9 @@ public class AudioServiceImpl implements AudioService {
                     if (jsonNode.has("file_path")) {
                         String filePath = jsonNode.get("file_path").asText();
                         response.put("file_path", filePath);
+                        // 提取文件名并添加到响应中
+                        String fileName = new File(filePath).getName();
+                        response.put("file_name", fileName);
                     }
                     
                     if (jsonNode.has("error")) {
