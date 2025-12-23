@@ -75,7 +75,7 @@
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-jsr310</artifactId>
-      <version>2.15.4</version> <!-- 版本需与 Spring Boot 管理的 Jackson 版本一致 -->
+      <version>2.15.4</version>
     </dependency>
 
     <dependency>
@@ -115,6 +115,21 @@
       <groupId>org.bytedeco</groupId>
       <artifactId>javacv-platform</artifactId>
       <version>1.5.10</version>
+    </dependency>
+
+    <!-- JUnit 5核心依赖 -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>5.9.2</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- JUnit 5运行器 -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>5.9.2</version>
+      <scope>test</scope>
     </dependency>
 
 </dependencies>
